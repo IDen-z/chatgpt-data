@@ -137,6 +137,19 @@
                 <version>1.5.18</version>
             </dependency>
 
+            <dependency>
+                <groupId>cn.bugstack.chatgpt</groupId>
+                <artifactId>chatgpt-sdk-java</artifactId>
+                <version>1.0</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-simple</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+
 <!--            &lt;!&ndash; 从地址下载代码，本地idea打开，执行install操作；chatgpt-sdk-java https://gitcode.net/KnowledgePlanet/chatgpt/chatgpt-sdk-java&ndash;&gt;-->
 <!--            <dependency>-->
 <!--                <groupId>cn.bugstack.chatgpt</groupId>-->

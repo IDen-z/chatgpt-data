@@ -2,6 +2,7 @@ package com.zmz.chatgpt.data.domain.openai.model.aggregates;
 
 import com.zmz.chatgpt.data.domain.openai.model.entity.MessageEntity;
 import com.zmz.chatgpt.data.types.enums.ChatGPTModel;
+import com.zmz.chatgpt.data.types.enums.OpenAiChannel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +23,9 @@ public class ChatProcessAggregate {
     /** 问题描述 */
     private List<MessageEntity> messages;
 
-
+    public OpenAiChannel getChannel(){
+        return OpenAiChannel.getChannel(this.model);
+    }
 
 }
 

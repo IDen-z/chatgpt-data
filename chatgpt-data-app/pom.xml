@@ -131,6 +131,10 @@
             <artifactId>chatgpt-sdk-java</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.zmz</groupId>
+            <artifactId>chatgpt-sdk</artifactId>
+        </dependency>
 
         <!-- 自身模块 begin -->
         <dependency>

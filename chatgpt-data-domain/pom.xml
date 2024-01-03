@@ -44,6 +44,10 @@
         </dependency>
         <dependency>
             <groupId>com.zmz</groupId>
+            <artifactId>chatgpt-sdk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zmz</groupId>
             <artifactId>chatgpt-data-types</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>

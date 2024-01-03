@@ -149,6 +149,18 @@
                 </exclusions>
             </dependency>
 
+            <dependency>
+                <groupId>com.zmz</groupId>
+                <artifactId>chatgpt-sdk</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-simple</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
 
 <!--            &lt;!&ndash; 从地址下载代码，本地idea打开，执行install操作；chatgpt-sdk-java https://gitcode.net/KnowledgePlanet/chatgpt/chatgpt-sdk-java&ndash;&gt;-->
 <!--            <dependency>-->

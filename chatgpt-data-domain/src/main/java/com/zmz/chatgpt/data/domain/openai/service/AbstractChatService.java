@@ -30,8 +30,8 @@ public abstract class AbstractChatService implements IChatService {
 //    private IOpenAiRepository openAiRepository;
 
     @Override
-    public ResponseBodyEmitter completions(ChatProcessAggregate chatProcess) {
-        ResponseBodyEmitter emitter = new ResponseBodyEmitter(3 * 60 * 1000L);
+    public ResponseBodyEmitter completions(ResponseBodyEmitter emitter, ChatProcessAggregate chatProcess) {
+//        ResponseBodyEmitter emitter = new ResponseBodyEmitter(3 * 60 * 1000L);
         try {
             // 1. 请求应答
             emitter.onCompletion(() -> {

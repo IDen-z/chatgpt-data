@@ -50,8 +50,10 @@ public abstract class AbstractAuthService implements IAuthService {
 
         // 3. 获取 Token 并返回
         Map<String, Object> chaim = new HashMap<>();
+        // 每个用户具有单独的openid
         chaim.put("openId", authStateEntity.getOpenId());
-        String token = encode(authStateEntity.getOpenId(), 7 * 24 * 60 * 60 * 1000, chaim);
+        // 过期时间1小时
+        String token = encode(authStateEntity.getOpenId(),  60 * 60 * 1000, chaim);
         authStateEntity.setToken(token);
 
         return authStateEntity;

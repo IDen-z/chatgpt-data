@@ -17,4 +17,11 @@ public class GoogleGuavaCodeCacheConfig {
                 .build();
     }
 
+    @Bean(name = "visitCache")
+    public Cache<String, Integer> visitCache() {
+        return CacheBuilder.newBuilder()
+                .expireAfterWrite(1, TimeUnit.DAYS)
+                .build();
+    }
+
 }

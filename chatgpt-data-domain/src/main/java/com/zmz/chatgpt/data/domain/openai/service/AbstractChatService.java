@@ -2,7 +2,9 @@ package com.zmz.chatgpt.data.domain.openai.service;
 
 import com.zmz.chatgpt.data.domain.openai.model.aggregates.ChatProcessAggregate;
 import com.zmz.chatgpt.data.domain.openai.model.entity.RuleLogicEntity;
+import com.zmz.chatgpt.data.domain.openai.model.entity.UserAccountQuotaEntity;
 import com.zmz.chatgpt.data.domain.openai.model.valobj.LogicCheckTypeVO;
+import com.zmz.chatgpt.data.domain.openai.repository.IOpenAiRepository;
 import com.zmz.chatgpt.data.domain.openai.service.logic.ChatGLMService;
 import com.zmz.chatgpt.data.domain.openai.service.logic.ChatGPTService;
 import com.zmz.chatgpt.data.domain.openai.service.logic.OpenAiGroupService;
@@ -13,6 +15,7 @@ import com.zmz.chatgpt.data.types.exception.ChatGPTException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +23,10 @@ import java.util.Map;
 public abstract class AbstractChatService implements IChatService {
 
     private final Map<OpenAiChannel, OpenAiGroupService> openAiGroup = new HashMap<>();
+
+    @Resource
+    private IOpenAiRepository openAiRepository;
+
 
     public AbstractChatService(ChatGPTService chatGPTService, ChatGLMService chatGLMService) {
         openAiGroup.put(OpenAiChannel.ChatGPT, chatGPTService);
@@ -39,10 +46,17 @@ public abstract class AbstractChatService implements IChatService {
             });
             emitter.onError(throwable -> log.error("流式问答请求疫情，使用模型：{}", chatProcess.getModel(), throwable));
 
+            // 2. 账户获取
+            UserAccountQuotaEntity userAccountQuotaEntity = openAiRepository.queryUserAccount(chatProcess.getOpenid());
+
             // 2. 规则过滤
             RuleLogicEntity<ChatProcessAggregate> ruleLogicEntity = this.doCheckLogic(chatProcess,
+                    userAccountQuotaEntity,
                     DefaultLogicFactory.LogicModel.ACCESS_LIMIT.getCode(),
-                    DefaultLogicFactory.LogicModel.SENSITIVE_WORD.getCode());
+                    DefaultLogicFactory.LogicModel.SENSITIVE_WORD.getCode(),
+                    null != userAccountQuotaEntity ? DefaultLogicFactory.LogicModel.ACCOUNT_STATUS.getCode() : DefaultLogicFactory.LogicModel.NULL.getCode(),
+                    null != userAccountQuotaEntity ? DefaultLogicFactory.LogicModel.MODEL_TYPE.getCode() : DefaultLogicFactory.LogicModel.NULL.getCode(),
+                    null != userAccountQuotaEntity ? DefaultLogicFactory.LogicModel.USER_QUOTA.getCode() : DefaultLogicFactory.LogicModel.NULL.getCode());
 
             if (!LogicCheckTypeVO.SUCCESS.equals(ruleLogicEntity.getType())) {
                 emitter.send(ruleLogicEntity.getInfo());
@@ -60,6 +74,6 @@ public abstract class AbstractChatService implements IChatService {
         return emitter;
     }
 
-    protected abstract RuleLogicEntity<ChatProcessAggregate> doCheckLogic(ChatProcessAggregate chatProcess, String... logics) throws Exception;
+    protected abstract RuleLogicEntity<ChatProcessAggregate> doCheckLogic(ChatProcessAggregate chatProcess, UserAccountQuotaEntity userAccountQuotaEntity, String... logics) throws Exception;
 
 }

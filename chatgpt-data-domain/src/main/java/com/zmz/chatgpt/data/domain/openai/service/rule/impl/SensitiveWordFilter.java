@@ -5,6 +5,7 @@ import com.zmz.chatgpt.data.domain.openai.annotation.LogicStrategy;
 import com.zmz.chatgpt.data.domain.openai.model.aggregates.ChatProcessAggregate;
 import com.zmz.chatgpt.data.domain.openai.model.entity.MessageEntity;
 import com.zmz.chatgpt.data.domain.openai.model.entity.RuleLogicEntity;
+import com.zmz.chatgpt.data.domain.openai.model.entity.UserAccountQuotaEntity;
 import com.zmz.chatgpt.data.domain.openai.model.valobj.LogicCheckTypeVO;
 import com.zmz.chatgpt.data.domain.openai.service.rule.ILogicFilter;
 import com.zmz.chatgpt.data.domain.openai.service.rule.factory.DefaultLogicFactory;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @LogicStrategy(logicMode = DefaultLogicFactory.LogicModel.SENSITIVE_WORD)
-public class SensitiveWordFilter implements ILogicFilter {
+public class SensitiveWordFilter implements ILogicFilter<UserAccountQuotaEntity> {
 
     @Resource
     private SensitiveWordBs words;
@@ -32,7 +33,7 @@ public class SensitiveWordFilter implements ILogicFilter {
     private String whiteListStr;
 
     @Override
-    public RuleLogicEntity<ChatProcessAggregate> filter(ChatProcessAggregate chatProcess) throws Exception {
+    public RuleLogicEntity<ChatProcessAggregate> filter(ChatProcessAggregate chatProcess, UserAccountQuotaEntity data) throws Exception {
         // 白名单用户不做敏感词处理
         if (chatProcess.isWhiteList(whiteListStr)) {
             return RuleLogicEntity.<ChatProcessAggregate>builder()
@@ -64,3 +65,4 @@ public class SensitiveWordFilter implements ILogicFilter {
     }
 
 }
+

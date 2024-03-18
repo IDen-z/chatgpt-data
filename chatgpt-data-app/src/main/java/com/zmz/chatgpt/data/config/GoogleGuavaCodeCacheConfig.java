@@ -2,6 +2,8 @@ package com.zmz.chatgpt.data.config;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.eventbus.EventBus;
+import com.zmz.chatgpt.data.trigger.mq.OrderPaySuccessListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,6 +24,16 @@ public class GoogleGuavaCodeCacheConfig {
         return CacheBuilder.newBuilder()
                 .expireAfterWrite(1, TimeUnit.DAYS)
                 .build();
+    }
+
+    /**
+     * event bus 的消息队列是放在内存中的 重启丢失
+     */
+    @Bean
+    public EventBus eventBusListener(OrderPaySuccessListener listener){
+        EventBus eventBus = new EventBus();
+        eventBus.register(listener);
+        return eventBus;
     }
 
 }
